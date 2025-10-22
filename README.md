@@ -39,13 +39,18 @@ Well fam, **CipherX** got you covered — just drop your password and pick your 
 Fork this repo to copy it into your system.  
 
 Then open **Bash** and run:
+
 git clone https://github.com/amrit100612/CipherX_404.git
+
 pwd # view the path of this project
 
 
 ### Step 2 — Make & Push Changes
+
 git add .
+
 git commit -m "✨ your cool update here"
+
 git push origin main
 
 
@@ -54,7 +59,7 @@ git push origin main
 ## 🔥 Fire It Up
 
 Run the project using:
-python cipherx.py
+   python cipherx.py
 
 
 ---
