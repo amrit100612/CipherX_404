@@ -1,48 +1,83 @@
-🔐 CipherX Password Encrypter/Decrypter 💻
-Yo! Welcome to CipherX, the brainchild of a cyber geek 🧠 — @amrit100612 😎
-This project is all about transforming your password game from basic to boss level 🔥
+# 🔐 CipherX Password Encrypter/Decrypter 💻
 
-⚡ Project Vibe:
-Ever wanted to encrypt your password like a pro hacker 🕶️?
-Or decrypt one just to see the magic reverse? 🧩
-Well fam, CipherX got you covered — just drop your password and choose your weapon 🗡️:
-👉 Encryption or Decryption
+Yo! Welcome to **CipherX**, the brainchild of a cyber geek 🧠 — [@amrit100612](https://github.com/amrit100612) 😎  
+This project levels up your password game from *basic* to *boss* 🔥  
 
-🧠 How It Works:
-User types a custom password (your secret sauce 🫢).
+---
 
-Choose the mode:
+## ⚡ Project Vibe
 
-🛡️ Encrypt Mode — hides it like a true cyber ninja(Cipher_text) 🥷
+Ever wanted to encrypt your password like a pro hacker 🕶️?  
+Or decrypt one just to see the reverse magic? 🧩  
 
-🧮 Decrypt Mode — brings it back to readable human form(Plain_text) 👀
+Well fam, **CipherX** got you covered — just drop your password and pick your mode 🗡️  
+👉 **Encryption** or **Decryption**
 
-Watch CipherX do its cryptographic flex 💫
+---
 
-🛠️ Tech Stack:
-Language: Python 🐍
+## 🧠 How It Works
 
-Concepts Used: String manipulation, basic encryption algorithms, input/output handling
+1. Type your password (your secret sauce 🫢)  
+2. Choose the mode:
+   - 🛡️ **Encrypt Mode** — hides it like a true cyber ninja (*Cipher_text*) 🥷  
+   - 🧮 **Decrypt Mode** — brings it back to human-readable form (*Plain_text*) 👀  
+3. Watch CipherX flex its cryptographic power 💫  
 
-IDE Recommended: VS Code / PyCharm (because aesthetics matter )
+---
 
-🚀 Run It Like a Pro:
-bash
-# Clone this repo
-git clone https://github.com/amrit100612/CipherX.git
+## 🛠️ Tech Stack
 
-# Navigate to project folder
-cd CipherX
+- **Language:** Python 🐍  
+- **Concepts Used:** String manipulation, basic encryption algorithms, input/output handling  
+- **Recommended IDEs:** VS Code / PyCharm (because aesthetics matter 😎)  
 
-# Fire it up 🔥
-python cipherx.py
-💬 Example Vibes:
-text
+---
+
+## 🚀 Run It Like a Pro
+
+### Step 1 — Fork & Clone
+Fork this repo to copy it into your system.  
+
+Then open **Bash** and run:
+
+git clone https://github.com/amrit100612/CipherX_404.git
+
+pwd # view the path of this project
+
+
+### Step 2 — Make & Push Changes
+
+git add .
+
+git commit -m "✨ your cool update here"
+
+git push origin main
+
+
+---
+
+## 🔥 Fire It Up
+
+Run the project using:
+   python cipherx.py
+
+
+---
+
+## 💬 Example Run
 Enter your password: mySecret123
 Do you want to Encrypt or Decrypt? -> Encrypt
 Encrypted password: ♦∆ʬΩЖη...
-Boom 💣 Your password’s now safe in the matrix.
 
-🧑‍💻 About the Creator:
-Made with caffeine ☕, late-night energy ⚡, and cyber vibes 👾 by
-@amrit100612 — Cybersecurity Student | Encryption Enthusiast 🧬
+Boom 💣 Your password’s now safe in the matrix 🧩  
+
+---
+
+## 🧑‍💻 About the Creator
+
+Made with caffeine ☕, late-night energy ⚡, and cyber vibes 👾  
+by **[@amrit100612](https://github.com/amrit100612)** — *Cybersecurity Student | Encryption Enthusiast* 🧬  
+
+---
+
+⭐ **Give a star** if you liked this project and stay tuned for more cool tools 🔥

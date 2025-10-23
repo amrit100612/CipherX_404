@@ -1,4 +1,6 @@
-# You've to install pyfiglet colorama to install this just write in bash shell "pip install pyfiglet colorama"  
+# You've to install pyfiglet colorama 
+#To install just write in bash shell "pip install pyfiglet colorama"  
+
 import pyfiglet
 from colorama import init, Fore, Style
 import shutil
