@@ -16,10 +16,9 @@ def encrypt_password(password, shift=3):
             encrypted += encrypted_char
         else:
             encrypted += char
-        # Display spinner animation
         sys.stdout.write(f"\rEncrypting... {next(spin)}")
         sys.stdout.flush()
-        time.sleep(0.05)  # simulate processing delay
+        time.sleep(0.05)  
     print("\rEncryption complete!    ")
     return encrypted
 
@@ -33,10 +32,10 @@ def decrypt_password(encrypted_password, shift=3):
             decrypted += decrypted_char
         else:
             decrypted += char
-        # Display spinner animation
+        
         sys.stdout.write(f"\rDecrypting... {next(spin)}")
         sys.stdout.flush()
-        time.sleep(0.05)  # simulate processing delay
+        time.sleep(0.08)  
     print("\rDecryption complete!    ")
     return decrypted
 
