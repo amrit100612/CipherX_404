@@ -13,6 +13,193 @@ def caesar_shift(text: str, shift: int) -> str:
     return "".join(result)
 
 
+def normalize_letters(text: str) -> str:
+    return "".join(ch for ch in text.upper() if ch.isalpha())
+
+
+def hill_matrix_from_key(key: str):
+    key = (key or "HELLO").upper().replace('J', 'I')
+    letters = []
+    for ch in key:
+        if ch.isalpha() and ch not in letters:
+            letters.append(ch)
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for ch in alphabet:
+        if ch not in letters and ch != 'J':
+            letters.append(ch)
+
+    matrix = [
+        [ord(letters[0]) - 65, ord(letters[1]) - 65],
+        [ord(letters[2]) - 65, ord(letters[3]) - 65],
+    ]
+    if (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 26 == 0:
+        matrix = [[3, 3], [2, 5]]
+    return matrix
+
+
+def mod_inverse(value: int, modulus: int) -> int:
+    value = value % modulus
+    for candidate in range(1, modulus):
+        if (value * candidate) % modulus == 1:
+            return candidate
+    raise ValueError(f"No modular inverse for {value} modulo {modulus}")
+
+
+def hill_encrypt(text: str, key: str = "HELLO") -> str:
+    letters = normalize_letters(text).replace('J', 'I')
+    if not letters:
+        return ""
+    matrix = hill_matrix_from_key(key)
+    if len(letters) % 2 != 0:
+        letters += 'X'
+
+    result = []
+    for i in range(0, len(letters), 2):
+        a = ord(letters[i]) - 65
+        b = ord(letters[i + 1]) - 65
+        x = (matrix[0][0] * a + matrix[0][1] * b) % 26
+        y = (matrix[1][0] * a + matrix[1][1] * b) % 26
+        result.append(chr(x + 65))
+        result.append(chr(y + 65))
+    return "".join(result)
+
+
+def hill_decrypt(text: str, key: str = "HELLO") -> str:
+    letters = normalize_letters(text).replace('J', 'I')
+    if not letters:
+        return ""
+    matrix = hill_matrix_from_key(key)
+    det = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 26
+    inv_det = mod_inverse(det, 26)
+    inverse = [
+        [(matrix[1][1] * inv_det) % 26, ((-matrix[0][1]) * inv_det) % 26],
+        [((-matrix[1][0]) * inv_det) % 26, (matrix[0][0] * inv_det) % 26],
+    ]
+
+    result = []
+    for i in range(0, len(letters), 2):
+        a = ord(letters[i]) - 65
+        b = ord(letters[i + 1]) - 65
+        x = (inverse[0][0] * a + inverse[0][1] * b) % 26
+        y = (inverse[1][0] * a + inverse[1][1] * b) % 26
+        result.append(chr(x + 65))
+        result.append(chr(y + 65))
+    return "".join(result)
+
+
+def playfair_square(key: str):
+    key = (key or "MONARCHY").upper().replace('J', 'I')
+    alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ"
+    square_chars = []
+    seen = set()
+    for ch in key + alphabet:
+        if ch.isalpha() and ch not in seen and ch != 'J':
+            square_chars.append(ch)
+            seen.add(ch)
+    matrix = [square_chars[i:i + 5] for i in range(0, 25, 5)]
+    position = {ch: (r, c) for r, row in enumerate(matrix) for c, ch in enumerate(row)}
+    return matrix, position
+
+
+def playfair_encrypt(text: str, key: str = "MONARCHY") -> str:
+    letters = normalize_letters(text).replace('J', 'I')
+    if not letters:
+        return ""
+    if len(letters) % 2 != 0:
+        letters += 'X'
+    matrix, positions = playfair_square(key)
+    result = []
+    for i in range(0, len(letters), 2):
+        a, b = letters[i], letters[i + 1]
+        ra, ca = positions[a]
+        rb, cb = positions[b]
+        if ra == rb:
+            result.append(matrix[ra][(ca + 1) % 5])
+            result.append(matrix[rb][(cb + 1) % 5])
+        elif ca == cb:
+            result.append(matrix[(ra + 1) % 5][ca])
+            result.append(matrix[(rb + 1) % 5][cb])
+        else:
+            result.append(matrix[ra][cb])
+            result.append(matrix[rb][ca])
+    return "".join(result)
+
+
+def playfair_decrypt(text: str, key: str = "MONARCHY") -> str:
+    letters = normalize_letters(text).replace('J', 'I')
+    if not letters:
+        return ""
+    matrix, positions = playfair_square(key)
+    result = []
+    for i in range(0, len(letters), 2):
+        a, b = letters[i], letters[i + 1]
+        ra, ca = positions[a]
+        rb, cb = positions[b]
+        if ra == rb:
+            result.append(matrix[ra][(ca - 1) % 5])
+            result.append(matrix[rb][(cb - 1) % 5])
+        elif ca == cb:
+            result.append(matrix[(ra - 1) % 5][ca])
+            result.append(matrix[(rb - 1) % 5][cb])
+        else:
+            result.append(matrix[ra][cb])
+            result.append(matrix[rb][ca])
+    return "".join(result)
+
+
+def rail_fence_encrypt(text: str, rails: int = 3) -> str:
+    if rails <= 1 or not text:
+        return text
+    rails = max(2, rails)
+    pattern = [[] for _ in range(rails)]
+    current_rail = 0
+    direction = 1
+    for ch in text:
+        pattern[current_rail].append(ch)
+        if current_rail == 0:
+            direction = 1
+        elif current_rail == rails - 1:
+            direction = -1
+        current_rail += direction
+    return "".join("".join(r) for r in pattern)
+
+
+def rail_fence_decrypt(text: str, rails: int = 3) -> str:
+    if rails <= 1 or not text:
+        return text
+    rails = max(2, rails)
+    rail_lengths = [0] * rails
+    current_rail = 0
+    direction = 1
+    for _ in text:
+        rail_lengths[current_rail] += 1
+        if current_rail == 0:
+            direction = 1
+        elif current_rail == rails - 1:
+            direction = -1
+        current_rail += direction
+
+    rails_text = []
+    start = 0
+    for length in rail_lengths:
+        rails_text.append(list(text[start:start + length]))
+        start += length
+
+    result = []
+    current_rail = 0
+    direction = 1
+    index = 0
+    for _ in text:
+        result.append(rails_text[current_rail][0])
+        rails_text[current_rail] = rails_text[current_rail][1:]
+        if current_rail == 0:
+            direction = 1
+        elif current_rail == rails - 1:
+            direction = -1
+        current_rail += direction
+    return "".join(result)
+
+
 def encrypt_password(password: str, shift: int = 3) -> str:
     return caesar_shift(password, shift)
 
@@ -435,20 +622,43 @@ with col_left:
     st.markdown('<h3 class="panel-title">Conversion tool</h3>', unsafe_allow_html=True)
     with st.form(key="cipher_form"):
         mode = st.radio("Mode", ["Encrypt", "Decrypt"], horizontal=True)
+        algorithm = st.selectbox(
+            "Cipher algorithm",
+            ["Caesar Cipher", "Hill Cipher", "Playfair Cipher", "Rail Fence Cipher"],
+            index=0,
+        )
         password = st.text_input("Password", type="password", placeholder="Enter your password")
-        shift = st.slider("Shift value", 1, 25, 3)
-        submitted = st.form_submit_button("Encrypt Password" if mode == "Encrypt" else "Decrypt Password", use_container_width=True)
+
+        if algorithm == "Caesar Cipher":
+            shift = st.slider("Shift value", 1, 25, 3)
+        elif algorithm == "Hill Cipher":
+            hill_key = st.text_input("Hill key", value="HELLO")
+        elif algorithm == "Playfair Cipher":
+            playfair_key = st.text_input("Playfair key", value="MONARCHY")
+        else:
+            rails = st.slider("Rail count", 2, 8, 3)
+
+        submitted = st.form_submit_button(
+            "Encrypt Password" if mode == "Encrypt" else "Decrypt Password",
+            use_container_width=True,
+        )
 
     if submitted:
         if not password.strip():
             st.warning("Please enter a password first.")
         else:
-            if mode == "Encrypt":
-                result = encrypt_password(password, shift)
-                action_text = "Encrypted password"
+            if algorithm == "Caesar Cipher":
+                result = encrypt_password(password, shift) if mode == "Encrypt" else decrypt_password(password, shift)
+                action_text = "Encrypted password" if mode == "Encrypt" else "Decrypted password"
+            elif algorithm == "Hill Cipher":
+                result = hill_encrypt(password, hill_key) if mode == "Encrypt" else hill_decrypt(password, hill_key)
+                action_text = "Encrypted password" if mode == "Encrypt" else "Decrypted password"
+            elif algorithm == "Playfair Cipher":
+                result = playfair_encrypt(password, playfair_key) if mode == "Encrypt" else playfair_decrypt(password, playfair_key)
+                action_text = "Encrypted password" if mode == "Encrypt" else "Decrypted password"
             else:
-                result = decrypt_password(password, shift)
-                action_text = "Decrypted password"
+                result = rail_fence_encrypt(password, rails) if mode == "Encrypt" else rail_fence_decrypt(password, rails)
+                action_text = "Encrypted password" if mode == "Encrypt" else "Decrypted password"
 
             st.success(action_text)
             st.code(result)
@@ -458,10 +668,11 @@ with col_right:
     st.markdown(
         """
         <div class="muted">
-            1. Enter a password<br>
-            2. Select Encrypt or Decrypt<br>
-            3. Choose your shift value<br>
-            4. Read the transformed output
+            1. Pick your cipher algorithm<br>
+            2. Enter a password<br>
+            3. Choose Encrypt or Decrypt<br>
+            4. Use the matching key or shift value<br>
+            5. Copy the output when ready
         </div>
         """,
         unsafe_allow_html=True,
