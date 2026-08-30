@@ -253,7 +253,7 @@
         <div class="shift-val" id="shiftVal">3</div>
       </div>
 
-      <button class="run-btn" id="runBtn" onclick="run()">Run encryption</button>
+      <button class="run-btn" id="runBtn" onclick="run()" aria-label="Submit password">ENTER</button>
 
       <div class="output-wrap">
         <div class="output-head">
@@ -283,7 +283,7 @@
     mode = m;
     document.getElementById('btnEncrypt').classList.toggle('active', m === 'encrypt');
     document.getElementById('btnDecrypt').classList.toggle('active', m === 'decrypt');
-    document.getElementById('runBtn').textContent = m === 'encrypt' ? 'Run encryption' : 'Run decryption';
+    document.getElementById('runBtn').textContent = m === 'encrypt' ? 'ENTER ENCRYPT' : 'ENTER DECRYPT';
     resetOutput();
   }
 
