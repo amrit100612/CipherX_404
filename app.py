@@ -33,24 +33,24 @@ st.markdown(
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
         :root {
-            --bg: #060d16;
-            --bg-2: #0c1824;
-            --panel: rgba(15, 23, 32, 0.96);
-            --panel-2: rgba(10, 17, 26, 0.9);
-            --line: rgba(148, 163, 184, 0.18);
-            --text: #edf6ff;
-            --muted: #9bb0c7;
-            --primary: #77d8ff;
-            --accent: #7b6cff;
-            --glow: rgba(119, 216, 255, 0.38);
-            --success: #68e0a7;
-            --warning: #ffd166;
+            --bg: #070b14;
+            --bg-2: #0d1525;
+            --panel: rgba(12, 18, 31, 0.82);
+            --panel-2: rgba(16, 24, 37, 0.9);
+            --line: rgba(123, 92, 255, 0.26);
+            --text: #eaf7ff;
+            --muted: #9db3c9;
+            --primary: #79f2ff;
+            --accent: #8b5cf6;
+            --glow: rgba(121, 242, 255, 0.25);
+            --success: #7cf7c4;
+            --warning: #ffc857;
         }
 
         html, body, [data-testid="stAppViewContainer"] {
             background:
-                radial-gradient(circle at top left, rgba(123, 108, 255, 0.25), transparent 30%),
-                radial-gradient(circle at top right, rgba(119, 216, 255, 0.18), transparent 28%),
+                radial-gradient(circle at top left, rgba(139, 92, 246, 0.24), transparent 26%),
+                radial-gradient(circle at top right, rgba(121, 242, 255, 0.18), transparent 28%),
                 linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
             color: var(--text);
             font-family: 'Inter', sans-serif;
@@ -82,16 +82,16 @@ st.markdown(
         }
 
         .brand-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            box-shadow: 0 0 18px rgba(119, 216, 255, 0.8);
+            box-shadow: none;
         }
 
         .chip {
-            border: 1px solid rgba(119, 216, 255, 0.2);
-            background: rgba(119, 216, 255, 0.06);
+            border: 1px solid rgba(121, 242, 255, 0.28);
+            background: rgba(121, 242, 255, 0.08);
             color: var(--primary);
             border-radius: 999px;
             padding: 0.5rem 0.85rem;
@@ -99,6 +99,7 @@ st.markdown(
             letter-spacing: 0.12em;
             text-transform: uppercase;
             font-weight: 700;
+            box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.15);
         }
 
         .hero-shell {
@@ -113,10 +114,10 @@ st.markdown(
         .hero-panel,
         .feature-card,
         .tool-panel {
-            background: rgba(15, 23, 32, 0.95);
-            border: 1px solid var(--line);
-            border-radius: 24px;
-            box-shadow: 0 28px 60px rgba(0,0,0,0.2);
+            background: linear-gradient(180deg, rgba(14, 21, 32, 0.96), rgba(10, 16, 27, 0.9));
+            border: 1px solid rgba(121, 242, 255, 0.14);
+            border-radius: 22px;
+            box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.08), 0 18px 50px rgba(9, 12, 20, 0.52);
         }
 
         .hero-copy {
@@ -135,7 +136,7 @@ st.markdown(
             align-items: center;
             gap: 0.6rem;
             color: var(--primary);
-            letter-spacing: 0.11em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             font-size: 0.72rem;
             font-weight: 700;
@@ -148,7 +149,7 @@ st.markdown(
             height: 8px;
             border-radius: 50%;
             background: var(--primary);
-            box-shadow: 0 0 10px rgba(119, 216, 255, 0.8);
+            box-shadow: 0 0 12px rgba(121, 242, 255, 0.8);
         }
 
         .hero-title {
@@ -162,7 +163,7 @@ st.markdown(
 
         .hero-title .accent {
             color: var(--primary);
-            text-shadow: 0 0 18px rgba(119, 216, 255, 0.4);
+            text-shadow: 0 0 24px rgba(121, 242, 255, 0.45);
         }
 
         .hero-subtitle {
@@ -232,7 +233,7 @@ st.markdown(
             height: 10px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            box-shadow: 0 0 12px rgba(119,216,255,0.8);
+            box-shadow: 0 0 12px rgba(121, 242, 255, 0.8);
             flex-shrink: 0;
         }
 
@@ -251,12 +252,13 @@ st.markdown(
             width: 42px;
             height: 42px;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(119,216,255,0.16), rgba(123,108,255,0.18));
+            background: linear-gradient(135deg, rgba(121, 242, 255, 0.12), rgba(139, 92, 246, 0.18));
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
             margin-bottom: 0.8rem;
+            box-shadow: inset 0 0 0 1px rgba(121, 242, 255, 0.18);
         }
 
         .feature-card h3 {
@@ -291,8 +293,8 @@ st.markdown(
         }
 
         .stRadio > div {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--line);
+            background: rgba(9, 15, 22, 0.8);
+            border: 1px solid rgba(121, 242, 255, 0.14);
             border-radius: 14px;
             padding: 0.45rem 0.5rem;
         }
@@ -304,12 +306,13 @@ st.markdown(
 
         .stTextInput > div > div > input,
         .stSlider > div > div > div {
-            background: rgba(9,16,23,0.92);
+            background: rgba(9, 15, 22, 0.8);
             color: var(--text);
-            border: 1px solid var(--line);
+            border: 1px solid rgba(121, 242, 255, 0.14);
             border-radius: 12px;
             min-height: 52px;
             padding-left: 1rem;
+            box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.12);
         }
 
         .stTextInput label, .stSlider label {
@@ -319,20 +322,20 @@ st.markdown(
         }
 
         .stButton > button {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #08131d;
+            background: linear-gradient(135deg, #79f2ff, #8b5cf6);
+            color: #050b14;
             border: none;
             border-radius: 12px;
             min-height: 52px;
             width: 100%;
             font-weight: 800;
             letter-spacing: 0.04em;
-            box-shadow: 0 12px 30px rgba(119, 216, 255, 0.22);
+            box-shadow: 0 0 20px rgba(121, 242, 255, 0.26);
         }
 
         .stButton > button:hover {
-            box-shadow: 0 14px 32px rgba(119, 216, 255, 0.28);
-            filter: brightness(1.03);
+            filter: brightness(1.04);
+            box-shadow: 0 0 26px rgba(139, 92, 246, 0.28);
         }
 
         .stAlert {
