@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CipherX — Password Encrypter/Decrypter</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700&display=swap');
+
+  :root{
+    --bg: #08050d;
+    --bg-panel: #120a1f;
+    --line: #33224a;
+    --green: #ff2ec4;
+    --green-dim: #7a1c66;
+    --cyan: #37e6ff;
+    --text: #f1e6f9;
+    --muted: #8f7aa8;
+    --red: #ff4d6d;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at 15% -10%, rgba(255,46,196,0.14), transparent 45%),
+      radial-gradient(ellipse at 90% 5%, rgba(55,230,255,0.12), transparent 40%),
+      radial-gradient(ellipse at 50% 100%, rgba(122,28,102,0.15), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono', monospace;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+
+  .scan{
+    pointer-events:none;
+    position:fixed; inset:0;
+    background:repeating-linear-gradient(
+      to bottom, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px,
+      transparent 1px, transparent 3px);
+    z-index:50;
+    mix-blend-mode:overlay;
+  }
+
+  header{
+    max-width:920px; margin:0 auto; padding:56px 24px 20px;
+  }
+  .eyebrow{
+    font-size:12px; letter-spacing:0.18em; color:var(--muted);
+    display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:var(--cyan); box-shadow:0 0 10px var(--cyan);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  h1{
+    font-family:'Space Grotesk', 'JetBrains Mono', monospace;
+    font-size:clamp(34px, 6vw, 58px);
+    line-height:1.02;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  h1 .brand{
+    color:var(--green);
+    text-shadow:0 0 12px rgba(255,46,196,0.55), 0 0 30px rgba(255,46,196,0.25);
+  }
+  h1 .glyphs{color:var(--cyan); font-weight:500; text-shadow:0 0 10px rgba(55,230,255,0.35);}
+
+  .sub{
+    color:var(--muted); font-size:15px; max-width:60ch; line-height:1.65;
+    margin:0 0 28px;
+  }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px; margin-bottom:8px;
+  }
+  .chip{
+    border:1px solid var(--line); color:var(--muted);
+    font-size:11.5px; padding:5px 10px; border-radius:3px;
+    letter-spacing:0.04em;
+  }
+  .chip b{color:var(--green); font-weight:600;}
+
+  main{max-width:920px; margin:0 auto; padding:20px 24px 80px;}
+
+  .panel{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -30px rgba(0,0,0,0.8), 0 0 40px -20px rgba(255,46,196,0.35), 0 0 40px -25px rgba(55,230,255,0.25);
+  }
+  .panel-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; border-bottom:1px solid var(--line);
+    background:linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+  }
+  .dots{display:flex; gap:6px;}
+  .dots span{width:10px; height:10px; border-radius:50%; background:var(--line);}
+  .panel-title{font-size:12px; color:var(--muted); letter-spacing:0.05em;}
+
+  .panel-body{padding:28px;}
+
+  .mode-toggle{
+    display:inline-flex; border:1px solid var(--line); border-radius:6px;
+    overflow:hidden; margin-bottom:22px;
+  }
+  .mode-toggle button{
+    font-family:inherit; font-size:13px; letter-spacing:0.05em;
+    background:transparent; color:var(--muted); border:none;
+    padding:9px 20px; cursor:pointer; transition:all .15s ease;
+  }
+  .mode-toggle button.active{
+    background:var(--green); color:#0c0410; font-weight:700;
+    box-shadow:0 0 16px rgba(255,46,196,0.6);
+  }
+  .mode-toggle button:not(.active):hover{ color:var(--text); }
+
+  label{
+    display:block; font-size:11.5px; color:var(--muted);
+    letter-spacing:0.08em; margin-bottom:8px;
+  }
+
+  .input-row{
+    display:flex; gap:10px; align-items:stretch; margin-bottom:6px;
+  }
+  input[type=text], input[type=password]{
+    flex:1; min-width:0;
+    background:#0d0716; border:1px solid var(--line); border-radius:6px;
+    color:var(--text); font-family:inherit; font-size:15px;
+    padding:13px 14px; outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  input:focus{ border-color:var(--cyan); box-shadow:0 0 0 3px rgba(55,230,255,0.15), 0 0 16px rgba(55,230,255,0.2); }
+
+  .eye-btn{
+    background:#0d0716; border:1px solid var(--line); border-radius:6px;
+    color:var(--muted); width:46px; cursor:pointer; font-size:14px;
+  }
+  .eye-btn:hover{ color:var(--text); border-color:var(--muted); }
+
+  .shift-row{
+    display:flex; align-items:center; gap:14px; margin:22px 0 26px;
+  }
+  .shift-row label{ margin:0; white-space:nowrap; }
+  input[type=range]{
+    -webkit-appearance:none; flex:1; height:3px; background:var(--line);
+    border-radius:2px; outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:15px; height:15px; border-radius:50%;
+    background:var(--cyan); cursor:pointer; box-shadow:0 0 10px rgba(55,230,255,0.7);
+  }
+  .shift-val{
+    font-size:13px; color:var(--cyan); min-width:56px; text-align:right;
+    text-shadow:0 0 8px rgba(55,230,255,0.4);
+  }
+
+  .run-btn{
+    width:100%; font-family:inherit; font-size:14px; font-weight:700;
+    letter-spacing:0.06em; text-transform:uppercase;
+    background:linear-gradient(90deg, var(--green), #b23ce0 55%, var(--cyan));
+    color:#0c0410; border:none; border-radius:6px;
+    padding:15px; cursor:pointer; transition:transform .1s ease, box-shadow .15s ease;
+    box-shadow:0 8px 24px -8px rgba(255,46,196,0.55);
+  }
+  .run-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 30px -6px rgba(255,46,196,0.7), 0 10px 30px -6px rgba(55,230,255,0.4); }
+  .run-btn:active{ transform:translateY(0); }
+
+  .output-wrap{
+    margin-top:26px; border-top:1px solid var(--line); padding-top:22px;
+  }
+  .output-head{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;
+  }
+  .copy-btn{
+    font-family:inherit; font-size:11.5px; letter-spacing:0.05em;
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    padding:6px 10px; border-radius:5px; cursor:pointer;
+  }
+  .copy-btn:hover{ color:var(--cyan); border-color:var(--cyan); }
+
+  .output-box{
+    background:#0d0716; border:1px dashed var(--line); border-radius:6px;
+    padding:16px; min-height:52px; font-size:15px; word-break:break-all;
+    color:var(--cyan); line-height:1.6;
+    text-shadow:0 0 10px rgba(55,230,255,0.35);
+  }
+  .output-box.empty{ color:var(--muted); font-style:italic; }
+  .output-box.error{ color:var(--red); }
+
+  footer{
+    max-width:920px; margin:0 auto; padding:0 24px 60px;
+    color:var(--muted); font-size:12.5px; display:flex; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+  }
+  footer a{ color:var(--muted); }
+  footer a:hover{ color:var(--green); }
+
+  .note{
+    margin-top:16px; font-size:12px; color:var(--muted); line-height:1.6;
+  }
+
+  @media (max-width:520px){
+    .panel-body{padding:20px;}
+    .shift-row{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+<div class="scan"></div>
+
+<header>
+  <div class="eyebrow">CIPHERX_404 · LOCAL, IN-BROWSER, NOTHING LEAVES YOUR DEVICE</div>
+  <h1><span class="brand">CipherX</span> <span class="glyphs">// encrypt ⇄ decrypt</span></h1>
+  <p class="sub">
+    A Caesar-shift password scrambler — the same logic as the original Python CLI,
+    now running client-side in your browser. Type a password, pick a direction, watch it rotate.
+  </p>
+  <div class="meta-row">
+    <div class="chip">algorithm: <b>caesar shift</b></div>
+    <div class="chip">default shift: <b>3</b></div>
+    <div class="chip">runs: <b>entirely client-side</b></div>
+  </div>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="panel-bar">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="panel-title">cipherx.py — running in your browser</div>
+      <div style="width:40px"></div>
+    </div>
+
+    <div class="panel-body">
+      <div class="mode-toggle">
+        <button id="btnEncrypt" class="active" onclick="setMode('encrypt')">Encrypt</button>
+        <button id="btnDecrypt" onclick="setMode('decrypt')">Decrypt</button>
+      </div>
+
+      <label for="pwInput">Password</label>
+      <div class="input-row">
+        <input id="pwInput" type="password" placeholder="Type your password…" autocomplete="off" spellcheck="false">
+        <button class="eye-btn" id="toggleVis" onclick="toggleVisibility()" title="Show/hide">👁</button>
+      </div>
+
+      <div class="shift-row">
+        <label for="shiftRange" style="margin:0;">Shift</label>
+        <input type="range" id="shiftRange" min="1" max="25" value="3" oninput="onShiftChange()">
+        <div class="shift-val" id="shiftVal">3</div>
+      </div>
+
+      <button class="run-btn" id="runBtn" onclick="run()">Run encryption</button>
+
+      <div class="output-wrap">
+        <div class="output-head">
+          <label style="margin:0;">Result</label>
+          <button class="copy-btn" onclick="copyOutput()">Copy</button>
+        </div>
+        <div class="output-box empty" id="outputBox">— nothing yet —</div>
+      </div>
+
+      <p class="note">
+        Non-alphabet characters (numbers, symbols, spaces) pass through unchanged, exactly like the
+        original script — only letters get rotated. Decrypt with the same shift value used to encrypt.
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>Based on <a href="https://github.com/amrit100612/CipherX_404" target="_blank" rel="noopener">amrit100612/CipherX_404</a></span>
+  <span>Cybersecurity student project · Python original, this is a browser port</span>
+</footer>
+
+<script>
+  let mode = 'encrypt';
+
+  function setMode(m){
+    mode = m;
+    document.getElementById('btnEncrypt').classList.toggle('active', m === 'encrypt');
+    document.getElementById('btnDecrypt').classList.toggle('active', m === 'decrypt');
+    document.getElementById('runBtn').textContent = m === 'encrypt' ? 'Run encryption' : 'Run decryption';
+    resetOutput();
+  }
+
+  function onShiftChange(){
+    document.getElementById('shiftVal').textContent = document.getElementById('shiftRange').value;
+  }
+
+  function toggleVisibility(){
+    const inp = document.getElementById('pwInput');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  function caesarShift(str, shift){
+    let out = '';
+    for (const char of str){
+      if (/[a-zA-Z]/.test(char)){
+        const base = char === char.toUpperCase() ? 65 : 97;
+        const code = char.charCodeAt(0) - base;
+        const shifted = ((code + shift) % 26 + 26) % 26;
+        out += String.fromCharCode(shifted + base);
+      } else {
+        out += char;
+      }
+    }
+    return out;
+  }
+
+  function resetOutput(){
+    const box = document.getElementById('outputBox');
+    box.textContent = '— nothing yet —';
+    box.classList.add('empty');
+    box.classList.remove('error');
+  }
+
+  function run(){
+    const pw = document.getElementById('pwInput').value;
+    const shift = parseInt(document.getElementById('shiftRange').value, 10);
+    const box = document.getElementById('outputBox');
+
+    if (!pw){
+      box.textContent = 'Type a password first.';
+      box.classList.add('error');
+      box.classList.remove('empty');
+      return;
+    }
+
+    const effectiveShift = mode === 'encrypt' ? shift : -shift;
+    const result = caesarShift(pw, effectiveShift);
+
+    box.textContent = result;
+    box.classList.remove('empty', 'error');
+  }
+
+  function copyOutput(){
+    const box = document.getElementById('outputBox');
+    if (box.classList.contains('empty') || box.classList.contains('error')) return;
+    navigator.clipboard.writeText(box.textContent).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = original, 1200);
+    });
+  }
+
+  document.getElementById('pwInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') run();
+  });
+</script>
+</body>
+</html>
